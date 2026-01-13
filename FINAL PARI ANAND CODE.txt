@@ -1,0 +1,218 @@
+import React, { useEffect, useRef } from 'react';
+import * as THREE from 'three';
+import { BrainCircuit, ArrowRight, ChevronsDown } from 'lucide-react';
+
+interface HeroProps {
+  onOpenAI: () => void;
+  onOpenAuth: () => void;
+}
+
+export const Hero: React.FC<HeroProps> = ({ onOpenAI, onOpenAuth }) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    if (!canvasRef.current) return;
+
+    const canvas = canvasRef.current;
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+    
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    camera.position.z = 5;
+
+    // Particles
+    const particlesCount = 1500;
+    const geometry = new THREE.BufferGeometry();
+    const positions = new Float32Array(particlesCount * 3);
+    const initialPositions: {x: number, y: number, z: number}[] = [];
+    const velocities: {x: number, y: number, z: number}[] = [];
+
+    for (let i = 0; i < particlesCount; i++) {
+        const x = (Math.random() - 0.5) * 20;
+        const y = (Math.random() - 0.5) * 20;
+        const z = (Math.random() - 0.5) * 20;
+        
+        positions[i * 3 + 0] = x;
+        positions[i * 3 + 1] = y;
+        positions[i * 3 + 2] = z;
+
+        initialPositions.push({ x, y, z });
+        velocities.push({
+            x: (Math.random() - 0.5) * 0.002,
+            y: (Math.random() - 0.5) * 0.002,
+            z: (Math.random() - 0.5) * 0.002
+        });
+    }
+
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const material = new THREE.PointsMaterial({
+        color: new THREE.Color('#C99A3A'),
+        size: 0.03,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        opacity: 0.8
+    });
+
+    const particles = new THREE.Points(geometry, material);
+    scene.add(particles);
+
+    const clock = new THREE.Clock();
+    let animationFrameId: number;
+
+    const animate = () => {
+        animationFrameId = requestAnimationFrame(animate);
+        const time = clock.getElapsedTime();
+
+        particles.rotation.y = time * 0.05;
+        
+        const posArray = geometry.attributes.position.array as Float32Array;
+
+        for(let i = 0; i < particlesCount; i++) {
+            // Floating effect
+            const i3 = i * 3;
+            posArray[i3 + 1] = initialPositions[i].y + Math.sin(time * 0.5 + i * 0.1) * 0.2;
+            
+            // Drift
+            posArray[i3] += velocities[i].x;
+            posArray[i3 + 2] += velocities[i].z;
+            
+            // Boundary check reset
+            if (Math.abs(posArray[i3]) > 10) posArray[i3] = initialPositions[i].x;
+            if (Math.abs(posArray[i3+2]) > 10) posArray[i3+2] = initialPositions[i].z;
+        }
+
+        geometry.attributes.position.needsUpdate = true;
+        renderer.render(scene, camera);
+    };
+
+    animate();
+
+    const handleResize = () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+        window.removeEventListener('resize', handleResize);
+        cancelAnimationFrame(animationFrameId);
+        renderer.dispose();
+        geometry.dispose();
+        material.dispose();
+    };
+  }, []);
+
+  return (
+    <section id="home" className="relative min-h-screen flex items-center justify-center bg-[#fce8e8] dark:bg-black overflow-hidden transition-colors duration-500">
+      <canvas ref={canvasRef} className="absolute inset-0 z-0" />
+      <div className="absolute inset-0 bg-gradient-to-t from-[#fce8e8] via-transparent to-[#fce8e8] dark:from-black dark:via-transparent dark:to-black opacity-90 z-10 pointer-events-none transition-colors duration-500"></div>
+
+      <div className="relative z-20 text-center px-4 max-w-7xl mx-auto py-24">
+        
+        <div className="relative z-10 flex flex-col items-center">
+            
+            {/* Branding Container */}
+            <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 mb-4">
+                
+                {/* Red Hands Logo */}
+                <div className="w-24 h-20 md:w-36 md:h-28 shrink-0 hover:scale-105 transition-transform duration-500">
+                    <svg className="w-full h-full drop-shadow-md" viewBox="0 0 200 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M190 50 C 170 -10 90 -10 50 40 C 30 65 70 75 100 70 C 130 65 180 80 190 50 Z" fill="#e02121" />
+                      <path d="M80 50 Q 120 40 160 55" stroke="white" strokeWidth="4" strokeLinecap="round" fill="none" />
+                      <path d="M85 60 Q 120 50 155 62" stroke="white" strokeWidth="4" strokeLinecap="round" fill="none" />
+                      <path d="M90 70 Q 120 60 145 68" stroke="white" strokeWidth="4" strokeLinecap="round" fill="none" />
+                      
+                      <path d="M10 90 C 30 150 110 150 150 100 C 170 75 130 65 100 70 C 70 75 20 60 10 90 Z" fill="#e02121" />
+                      <path d="M120 90 Q 80 100 40 85" stroke="white" strokeWidth="4" strokeLinecap="round" fill="none" />
+                      <path d="M115 80 Q 80 90 45 78" stroke="white" strokeWidth="4" strokeLinecap="round" fill="none" />
+                      <path d="M110 70 Q 80 80 55 72" stroke="white" strokeWidth="4" strokeLinecap="round" fill="none" />
+                    </svg>
+                </div>
+
+                {/* Title & Tagline Block */}
+                <div className="flex flex-col items-center md:items-start">
+                    {/* Main Title with Ganesha Sketch */}
+                    <div className="flex items-center gap-2 flex-wrap justify-center md:justify-start">
+                        <span className="text-5xl sm:text-7xl md:text-8xl font-wedding text-[#B30000] leading-none drop-shadow-sm pt-4">
+                            Parinay
+                        </span>
+                        
+                        {/* Ganesha Inline SVG - Refined Detailed Sketch */}
+                        <div className="w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 shrink-0 relative mt-2 mx-2 text-[#B30000] dark:text-wedding-gold opacity-90 hover:opacity-100 transition-all duration-500 hover:scale-110">
+                             <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full drop-shadow-lg" style={{ filter: 'drop-shadow(0px 6px 10px rgba(0,0,0,0.3))' }}>
+                                {/* Detailed Sketch of Ganesha */}
+                                <path d="M50 12C35 12 28 25 28 35C28 50 40 55 40 68C40 82 25 90 15 92C30 92 50 85 55 72" />
+                                <path d="M50 12C65 12 72 25 72 35C72 50 60 55 60 68" />
+                                {/* Large Artistic Ears */}
+                                <path d="M28 35C15 28 8 40 12 58C16 70 28 70 28 70" />
+                                <path d="M72 35C85 28 92 40 88 58C84 70 72 70 72 70" />
+                                {/* Expressive Eyes */}
+                                <circle cx="41" cy="38" r="1.5" fill="currentColor" />
+                                <circle cx="59" cy="38" r="1.5" fill="currentColor" />
+                                {/* Forehead Detail / Tilak */}
+                                <path d="M50 18V28" strokeWidth="2.5" />
+                                <path d="M46 22H54" strokeWidth="1" opacity="0.5" />
+                                <path d="M47 25H53" strokeWidth="1" opacity="0.5" />
+                            </svg>
+                        </div>
+
+                        <span className="text-5xl sm:text-7xl md:text-8xl font-wedding text-[#B30000] leading-none drop-shadow-sm pt-4">
+                            Anand
+                        </span>
+                    </div>
+                    
+                    {/* Hindi Tagline */}
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-sans font-bold text-gray-800 dark:text-gray-200 mt-2 tracking-wide w-full text-center md:text-right">
+                        परिचय से परिणय तक
+                    </h2>
+                </div>
+            </div>
+            
+            <p className="text-[#d9a21c] dark:text-wedding-gold font-sans text-sm md:text-lg tracking-widest mb-10 font-medium">
+                www.parinayanand.com
+            </p>
+
+            <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 mb-10 max-w-3xl mx-auto leading-relaxed font-light">
+                India's leading platform for premium, secure, and culturally relevant matchmaking. Find verified profiles that align with your family values.
+            </p>
+
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+                <button 
+                    onClick={onOpenAI}
+                    className="group relative px-8 py-3.5 uppercase tracking-widest rounded-lg transition-all duration-300 w-full sm:w-auto border-none shadow-[0_4px_15px_rgba(179,0,0,0.6)] bg-gradient-to-r from-[#B30000] to-wedding-gold text-white font-black hover:-translate-y-1 hover:shadow-[0_8px_35px_rgba(179,0,0,0.8)]"
+                >
+                    <span className="relative z-10 flex items-center gap-2 justify-center">
+                        <BrainCircuit className="w-5 h-5" />
+                        AI Powered Matchmaking
+                    </span>
+                </button>
+
+                <button 
+                    onClick={onOpenAuth}
+                    className="group relative px-8 py-3.5 uppercase tracking-widest rounded-lg transition-all duration-300 w-full sm:w-auto border-2 border-wedding-gold text-wedding-red dark:text-wedding-gold font-extrabold hover:-translate-y-1 hover:bg-wedding-gold/10 hover:text-wedding-red dark:hover:text-white"
+                >
+                    <span className="relative z-10 flex items-center gap-2 justify-center">
+                        Start Your Match <ArrowRight className="w-4 h-4" />
+                    </span>
+                </button>
+            </div>
+
+            <div className="mt-8">
+                <h3 className="text-xl font-bold text-gray-800 dark:text-wedding-gold mb-2">Real Stories, True Connections</h3>
+                <p className="text-md text-gray-600 dark:text-gray-300 max-w-xl mx-auto font-medium">
+                    Discover how Parinay Anand has brought together couples through meaningful connections.
+                </p>
+            </div>
+        </div>
+      </div>
+
+      <div className="absolute bottom-10 left-1/2 transform -translate-x-1/2 animate-bounce text-wedding-red dark:text-wedding-gold z-20">
+        <ChevronsDown className="w-8 h-8" />
+      </div>
+    </section>
+  );
+};

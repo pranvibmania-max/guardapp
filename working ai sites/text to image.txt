@@ -1,0 +1,77 @@
+You are an expert Frontend Developer and UI/UX Designer specializing in modern, dark-themed web applications.
+
+Task: Create a sophisticated, single-file "Ai Image Generator" web application using HTML, Tailwind CSS (via CDN), and Vanilla JavaScript.
+
+Design Language (UI/UX):
+
+Theme: Deep Dark Mode (Background: #020617, Surface: #0f172a).
+
+Style: "Glassmorphism" (Use translucent backgrounds with backdrop-filter: blur(16px), white borders at 10% opacity, and subtle glow effects).
+
+Colors: Primary accent is Indigo (#6366f1), Secondary is Fuchsia (#d946ef). Use gradients for buttons and text.
+
+Typography: Use 'Plus Jakarta Sans' font.
+
+Animations: Implement smooth scrolling, fade-in effects on scroll, floating 3D elements, and hover transitions.
+
+Structure & Features:
+
+Part 1: The Landing Page (Marketing Front)
+
+Header: Sticky glass header with Logo (Phosphor icon), Nav links (Features, Gallery, Blog, About), and a "Start Creating" CTA button.
+
+Hero Section: Large centered typography with a gradient text effect. Include floating animated icons in the background. Show a strip of example AI images scrolling horizontally.
+
+Features Grid: 3-column grid explaining the features (Lightning Fast, Infinite Styles, Free).
+
+Gallery Section: A masonry or grid layout showing high-quality example images with hover effects that show the prompt used.
+
+Blog Section: Display 3 distinct blog post cards with images and "Read More" links.
+
+Trust/API Section: Explain that it uses Pollinations.ai API. Show a code snippet in a glass card.
+
+Mega Footer: A large footer with newsletter signup, social icons, and organized links.
+
+Part 2: The Web App (Functional Modal)
+
+Trigger: When the user clicks "Start Creating", hide the landing page and fade in a full-screen App Interface.
+
+Layout:
+
+Sidebar (Left): Controls for Aspect Ratio (Square, Wide, Portrait), Style Dropdown (Cinematic, Anime, 3D, etc.), Advanced Settings (Seed input, Model selection: Flux/Turbo, Negative Prompt), and a History Grid (saves to LocalStorage).
+
+Main Canvas (Center): A large area to display the generated image. Include a "Loading Spinner" state and a "Placeholder" state. When hovering over the result, show "Download" and "Share" buttons.
+
+Input Bar (Bottom): A fixed, floating glass bar with a text input for the prompt, a "Magic Enhance" button (that adds keywords like '8k, masterpiece' to the prompt), and a "Generate" button.
+
+Technical Logic (JavaScript):
+
+API Integration: Use the Pollinations.ai API: https://image.pollinations.ai/prompt/{encoded_prompt}?width={w}&height={h}&seed={s}&model={m}.
+
+State Management: Handle loading states (disable button, show spinner).
+
+History: Save every generated image URL and prompt to localStorage and display them in the sidebar. Clicking a history item should restore that image.
+
+Enhance Feature: If the user clicks "Magic Enhance", append professional keywords to their input.
+
+Download: Allow users to download the image as a .png file.
+
+Constraints:
+
+Keep everything in ONE single index.html file (CSS in <style>, JS in <script>).
+
+Do not use external CSS/JS files (except CDNs for Tailwind/Icons).
+
+Ensure the design is fully responsive (mobile-friendly).
+
+Step-by-Step Explanation (Hindi)
+
+Ye prompt 4 main parts mein divided hai:
+
+Design Language: Sabse pehle maine AI ko bataya ki mujhe "Dark Mode" aur "Glassmorphism" chahiye. Ye Deep Dark colors aur Blur effects ke liye zaroori hai.
+
+Landing Page: Maine specifically kaha ki mujhe Hero section, Gallery, aur Blog chahiye taaki website professional lage, sirf ek tool nahi.
+
+Functional App: Maine landing page aur app ko alag kiya. "Trigger" logic (landing page hide, app show) se user experience seamless lagta hai.
+
+Logic: Maine Pollinations.ai ka API structure diya aur LocalStorage ka use karne ko kaha taaki page refresh hone par bhi purani images save rahein.

@@ -1,0 +1,109 @@
+You are an expert Full-Stack Developer and UI/UX Designer, specializing in creating modern, scalable web applications using React/Next.js and Firebase
+
+Objective: Generate a detailed project plan, component structure, and foundational code for a comprehensive "Multi Tools Calculator" website. The project should be designed for rapid development, assuming the use of a visual builder (we'll call it "Firebase Studio") for the front-end, which connects seamlessly to a Firebase backend for data, authentication, and hosting.
+Project Name: MultiToolVerse0.1
+
+1. Core Concept
+Multi ToolVerse0.1 is a one-stop web application that provides users with a wide range of free online calculators and utility tools. The design should be clean, minimalist, and extremely fast. The primary goal is to offer a user-friendly experience with easily accessible tools, categorized for convenience.
+
+2. Key Features to Implement
+A. Frontend & UI/UX (The "Firebase Studio" Part):
+Modern & Clean UI: A minimalist design with a focus on usability. Use a simple color palette (e.g., white, gray, and a single accent color).
+Responsive Design: The layout must be fully responsive and work flawlessly on desktops, tablets, and mobile devices.
+Categorized Navigation: A sidebar or top navigation bar that clearly lists the tool categories (e.g., Finance, Health, Math, Converters).
+Powerful Search Bar: A prominent search bar on the homepage that allows users to instantly find a tool (e.g., typing "BMI" or "loan" should show relevant results).
+
+Individual Tool Pages: Each calculator should have its own dedicated, SEO-friendly URL (e.g., Multitoolverse0.1.com/calculators/bmi-calculator).
+Light/Dark Mode: A toggle to switch between light and dark themes.
+Instant Calculations: All calculations should happen client-side in real-time as the user inputs data, without needing a page refresh.
+
+B. Calculator & Tool Categories (with examples):
+Financial Calculators:
+Loan/EMI Calculator
+Simple & Compound Interest Calculator
+GST/VAT Calculator
+Investment Return (ROI) Calculator
+Health & Fitness Calculators:
+Body Mass Index (BMI) Calculator
+Basal Metabolic Rate (BMR) Calculator
+Daily Calorie Intake Calculator
+Math & Science Calculators:
+Scientific Calculator
+Percentage Calculator
+Fraction Calculator
+Random Number Generator
+Unit Converters:
+Length (Meters, Feet, Inches)
+Weight (Kilograms, Pounds)
+homeopathic medicine finder
+Temperature (Celsius, Fahrenheit)
+Data (Bytes, KB, MB, GB)
+Developer Tools:
+URL Encoder/Decoder
+Base64 Encoder/Decoder
+Color Converter (HEX to RGB)
+Unix Timestamp Converter
+
+3. Technology Stack & Architecture ("Firebase Studio" Concept)
+
+For this prompt, assume "Firebase Studio" is a hypothetical low-code/no-code platform that lets you:
+Visually build React components.
+Use a utility-first CSS framework like Tailwind CSS by default.
+Seamlessly connect UI elements to a Firebase backend.
+Your generated plan should be based on this stack:
+Frontend Framework: React (or Next.js for SEO benefits).
+Styling: Tailwind CSS.
+Backend as a Service (BaaS): Firebase
+Hosting: Use Firebase Hosting for fast, global deployment.
+Authentication (Optional): Use Firebase Authentication if we want to add features like saving favorite tools or calculation history for users. Start without it, but design for its potential inclusion.
+Database: Use Firestore to store metadata about each tool (like its name, category, description, keywords for search). This allows us to dynamically generate the list of tools instead of hardcoding it.
+Cloud Functions (Optional): For complex calculations or tools that require external API calls (e.g., a real-time currency converter), plan to use Firebase Cloud Functions.
+
+4. Your Task: Generate the Following Output
+
+Please provide a detailed, actionable plan:
+1. Project Structure:
+Create a logical folder structure for a React/Next.js project.
+code
+Code
+/src
+  /components
+    /calculators
+    /common (Navbar, Footer, SearchBar)
+    /layout
+  /pages (or /app for Next.js 13+)
+  /styles
+  /utils (for calculation logic)
+
+2. Firestore Database Schema:
+Design a simple Firestore collection schema. For example, a tools collection where each document represents a calculator.
+code
+
+Collection: 'tools'
+Document ID: 'bmi-calculator'
+{
+  "name": "BMI Calculator",
+  "category": "Health & Fitness",
+  "description": "Calculate your Body Mass Index.",
+  "urlPath": "/calculators/bmi-calculator",
+  "keywords": ["bmi", "health", "weight", "fitness"]
+}
+3. Example Component Code (React + Tailwind CSS):
+Write the full code for the BMI Calculator component.
+It should include input fields for height (in cm) and weight (in kg).
+It must display the calculated BMI score in real-time.
+It should also show the BMI category (e.g., Underweight, Normal, Overweight) based on the result.
+Make sure the code is well-commented and uses Tailwind CSS for styling.
+
+4. Development Plan & Steps:
+Provide a step-by-step plan from setting up the project to deployment.
+Step 1: Setup Firebase project and React/Next.js app.
+Step 2: Configure Tailwind CSS.
+Step 3: Build the main layout (Navbar, Sidebar, Footer).
+Step 4: Create the dynamic routing and fetch tool data from Firestore to populate the navigation.
+Step 5: Develop the first tool (BMI Calculator) as a reusable component.
+Step 6: Create a generic ToolPage template that can render any calculator component based on the URL.
+Step 7: Deploy to Firebase Hosting.
+
+5. UI/UX Design Suggestions:
+Briefly describe the visual design for the homepage and a tool page. Mention where to place elements for the best user experience.
