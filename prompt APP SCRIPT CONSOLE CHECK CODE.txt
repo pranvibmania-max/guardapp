@@ -1,0 +1,37 @@
+<script>
+document.getElementById("checkoutForm").addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  const orderData = {
+    firstName: document.getElementById("firstName").value,
+    lastName: document.getElementById("lastName").value,
+    email: document.getElementById("email").value,
+    streetAddress: document.getElementById("streetAddress").value,
+    city: document.getElementById("city").value,
+    zipCode: document.getElementById("zipCode").value,
+    productName: document.getElementById("productName").value,
+    totalAmount: document.getElementById("totalAmount").value
+  };
+
+  fetch("https://script.google.com/macros/s/AKfycbwgUTZ_mvwxtD1chwSxEyVa6lGomTT0OZvnP376CSEA645HYQDaSWUd0kZbQ8z4UDu_bg/exec", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(orderData)
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.status === "success") {
+      alert("✅ Order placed successfully!");
+      document.getElementById("checkoutForm").reset();
+    } else {
+      alert("❌ Order failed");
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    alert("❌ Network error");
+  });
+});
+</script>
