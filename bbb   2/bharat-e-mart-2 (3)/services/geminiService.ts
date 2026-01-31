@@ -1,91 +1,40 @@
-import { GoogleGenAI, Modality } from "@google/genai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const getClient = () => {
-  const geminiKey = import.meta.env.VITE_GEMINI_API_KEY;
-console.log(geminiKey);
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
 
   if (!apiKey) {
     console.warn("Gemini API Key is missing");
     return null;
   }
-  return new GoogleGenAI({ apiKey });
+
+  return new GoogleGenerativeAI(apiKey);
 };
 
-export const generateProductDescription = async (productName: string, category: string): Promise<string> => {
+export const generateProductDescription = async (
+  productName: string,
+  category: string
+): Promise<string> => {
   const client = getClient();
-  if (!client) return "Gemini API key missing. Please configure it to use AI features.";
-
-  try {
-    const response = await client.models.generateContent({
-      model: 'gemini-3-flash-preview',
-      contents: `You are an expert e-commerce copywriter. Write a compelling, persuasive product description for a "${productName}" in the category "${category}". 
-      
-      Requirements:
-      - Focus on benefits and user experience.
-      - Keep it under 80 words.
-      - Use an enthusiastic but professional tone.
-      - Do not include hashtags or emojis.`,
-      config: {
-        temperature: 0.7,
-      }
-    });
-    return response.text || "No description generated.";
-  } catch (error) {
-    console.error("Gemini API Error:", error);
-    return "Failed to generate description. Please try again.";
+  if (!client) {
+    return "Gemini API key missing. Please configure it.";
   }
-};
-
-export const generateProductImage = async (productName: string, category: string, description: string): Promise<string | null> => {
-  const client = getClient();
-  if (!client) return null;
 
   try {
-    const prompt = `Professional product photography of ${productName} (${category}). ${description}. High resolution, studio lighting, white background, 8k, realistic texture, cinematic light, centered composition for e-commerce listing.`;
-    const response = await client.models.generateContent({
-      model: 'gemini-2.5-flash-image',
-      contents: { parts: [{ text: prompt }] },
+    const model = client.getGenerativeModel({
+      model: "gemini-1.5-flash",
     });
 
-    for (const part of response.candidates?.[0]?.content?.parts || []) {
-      if (part.inlineData) {
-        return `data:image/png;base64,${part.inlineData.data}`;
-      }
-    }
-    return null;
+    const result = await model.generateContent(
+      `You are an expert e-commerce copywriter.
+Write a compelling product description for:
+Product: ${productName}
+Category: ${category}`
+    );
+
+    return result.response.text();
   } catch (error) {
-    console.error("Gemini Image Gen Error:", error);
-    return null;
-  }
-};
-
-export const generateSpeech = async (text: string): Promise<string | null> => {
-  const client = getClient();
-  if (!client) return null;
-
-  try {
-    const response = await client.models.generateContent({
-      model: 'gemini-2.5-flash-preview-tts',
-      contents: {
-        parts: [{ text: text }],
-      },
-      config: {
-        responseModalities: [Modality.AUDIO],
-        speechConfig: {
-          voiceConfig: {
-            prebuiltVoiceConfig: { voiceName: 'Kore' },
-          },
-        },
-      },
-    });
-
-    const part = response.candidates?.[0]?.content?.parts?.[0];
-    if (part?.inlineData?.data) {
-      return part.inlineData.data;
-    }
-    return null;
-  } catch (error) {
-    console.error("Gemini TTS Error:", error);
-    return null;
+    console.error("Gemini error:", error);
+    return "Failed to generate description";
   }
 };
